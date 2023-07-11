@@ -1,0 +1,11 @@
+<a href="/">
+    <h1>SMC</h1>
+</a>
+
+{% if request.user.is_authenticated %}
+    <a href="{% url 'smc:logout' %}">Logout</a>
+{% else %}
+    <a href="{% url 'smc:login' %}">Login</a>
+{% endif %}
+
+<hr>

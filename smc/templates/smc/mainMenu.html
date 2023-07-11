@@ -1,0 +1,32 @@
+{% extends 'smc/base.html' %}
+
+{% block content %}
+  <h2>Menu</h2>
+  {% if error_message %}
+    <p>{{ error_message }}</p>
+  {% endif %}
+
+  <form method="post" action="http://localhost:8000/api/checkout/">
+    {% csrf_token %}
+    <div>
+      {{ form.roll_id.label_tag }}
+      {{ form.roll_id }}
+      <button type="button" id="fetch-balance-btn">Fetch Balance</button>
+    </div>
+    <div id="balance-container"></div>
+    <ul>
+      {% for item in form.fields.menu_items %}
+        <input type="checkbox">{{ item.name }} - ${{ item.price }}</input>
+      {% endfor %}
+    </ul>
+    <button type="submit">Submit Order</button>
+  </form>
+
+  <h3>Menu Items</h3>
+  <ul>
+    {% for item in form.fields.menu_items %}
+      <li>{{ item.name }} - ${{ item.price }}</li>
+    {% endfor %}
+  </ul>
+
+{% endblock %}

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Menu Items and Bag</title>
+    <style>
+      .container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin: 0 8%;
+      }
+      .title {
+        font-size: 20px;
+        font-weight: bold;
+        margin: 10px 0;
+      }
+      .menu {
+        margin-top: 20px;
+        width: 40vw;
+      }
+      .menu-container {
+        overflow-y: scroll;
+        height: 60vh;
+        padding: 2%;
+        border: 1px solid black;
+        border-radius: 8px;
+      }
+      .menu-container .menu-item {
+        margin: 20px 0;
+      }
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 10px;
+      }
+      ::-webkit-scrollbar-thumb {
+        border-radius: 8px;
+        background: #c2c9d2;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #b4bac4;
+      }
+
+      .bag-container {
+        overflow-y: scroll;
+        height: 50vh;
+        padding: 2%;
+        border: 1px solid black;
+        border-radius: 8px;
+      }
+
+      .menu-item span {
+        flex: 1;
+      }
+      .menu-item button {
+        flex: 0;
+      }
+      .menu-item {
+        border: 1px solid black;
+        padding: 10px;
+        border-radius: 8px;
+      }
+      .menu-item:not(:last-child) {
+        margin-bottom: 10px;
+      }
+      .bag {
+        width: 40vw;
+      }
+      .menu-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .bag {
+        margin-top: 20px;
+      }
+      .bag button {
+        margin: 10px;
+      }
+      .menu-item .add-to-bag-btn {
+        flex: 0.15;
+      }
+      .roll-entry-container {
+        margin: 20px 8%;
+        width: 50%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+      .bottom-container .row1 {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+        .total-cost, .balance {
+            width: 49%;
+        }
+    </style>
+  </head>
+  <body>
+      <div class="roll-entry-container">
+          <div class="roll-entry">
+            <span class="title">Student ID: </span>
+          <input type="text" id="roll-input" />
+          <button id="roll-search" onclick="fetchBalance(document.querySelector('#roll-input').value)">Check Balance</button>
+          </div>
+      </div>
+      <div class="container">
+          <div class="col1">
+              <div class="menu">
+          <div class="title">Menu Items</div>
+          <div class="menu-container">
+            <div class="menu-item">
+              <span>Item 1</span>
+              <button onclick="addToBag('Item 1', 1)" class="add-to-bag-btn">
+                Add to Bag
+              </button>
+            </div>
+            <div class="menu-item">
+              <span>Item 2</span>
+              <button onclick="addToBag('Item 2', 2)" class="add-to-bag-btn">
+                Add to Bag
+              </button>
+            </div>
+            <div class="menu-item">
+              <span>Item 3</span>
+              <button onclick="addToBag('Item 3', 3)" class="add-to-bag-btn">
+                Add to Bag
+              </button>
+            </div>
+            <div class="menu-item">
+              <span>Item 4</span>
+              <button onclick="addToBag('Item 4', 4)" class="add-to-bag-btn">
+                Add to Bag
+              </button>
+            </div>
+            <div class="menu-item">
+              <span>Item 5</span>
+              <button onclick="addToBag('Item 5', 5)" class="add-to-bag-btn">
+                Add to Bag
+              </button>
+            </div>
+            <div class="menu-item">
+              <span>Item 6</span>
+              <button onclick="addToBag('Item 6', 6)" class="add-to-bag-btn">
+                Add to Bag
+              </button>
+            </div>
+            <div class="menu-item">
+              <span>Item 7</span>
+              <button onclick="addToBag('Item 7', 7)" class="add-to-bag-btn">
+                Add to Bag
+              </button>
+            </div>
+            <div class="menu-item">
+              <span>Item 8</span>
+              <button onclick="addToBag('Item 8', 8)" class="add-to-bag-btn">
+                Add to Bag
+              </button>
+            </div>
+            <div class="menu-item">
+              <span>Item 9</span>
+              <button onclick="addToBag('Item 9', 9)" class="add-to-bag-btn">
+                Add to Bag
+              </button>
+            </div>
+            <div class="menu-item">
+              <span>Item 10</span>
+              <button onclick="addToBag('Item 10', 10)" class="add-to-bag-btn">
+                Add to Bag
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col2">
+        <div id="bag" class="bag">
+          <div class="title">Bag</div>
+          <div class="bag-container">
+            <div class="menu-item">No items in the bag.</div>
+          </div>
+        </div>
+        <div class="bottom-container">
+            <div class="row1">
+                <div class="total-cost">
+                    <div class="title">Total Cost</div>
+                    <div class="total-cost-container">
+                      <div class="menu-item">Rs 0</div>
+                    </div>
+                  </div>
+                  <div class="balance">
+                  </div>
+            </div>
+            <div class="row2">
+                <button onclick="checkout()">Checkout</button>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Bag items object
+      let bagItems = {};
+
+      // Function to add an item to the bag
+      function addToBag(item, price) {
+        if (bagItems[item]) {
+          bagItems[item]['qty']++;
+        } else {
+          bagItems[item] = { name: item, qty: 1, price: price};
+        }
+        updateBag();
+      }
+
+      // Function to remove an item from the bag
+      function removeFromBag(item) {
+        if (bagItems[item]) {
+          bagItems[item]['qty']--;
+          if (bagItems[item]['qty'] === 0) {
+            delete bagItems[item];
+          }
+          updateBag();
+          updateTotalCost();
+        }
+      }
+
+      // Function to update the bag display
+      function updateBag() {
+        const bagDiv = document.querySelector(".bag-container");
+        // select all menu items inside class bag
+        const menuItems = bagDiv.querySelectorAll(".menu-item");
+        // delete all menu items
+        for (const item of menuItems) {
+          item.remove();
+        }
+
+        if (Object.keys(bagItems).length === 0) {
+          // create a menu item div with text "No items in the bag."
+          const itemDiv = document.createElement("div");
+          itemDiv.className = "menu-item";
+          itemDiv.innerText = "No items in the bag.";
+          bagDiv.appendChild(itemDiv);
+          return;
+        }
+
+        for (const item in bagItems) {
+          const itemDiv = document.createElement("div");
+          itemDiv.className = "menu-item";
+          const itemSpan = document.createElement("span");
+          const minusBtn = document.createElement("button");
+
+          itemSpan.innerText = bagItems[item]['name'] + " (" + bagItems[item]['qty'] + ")";
+          minusBtn.innerText = " - ";
+          minusBtn.onclick = function () {
+            removeFromBag(item);
+          };
+          
+          itemDiv.appendChild(itemSpan);
+          itemDiv.appendChild(minusBtn);
+          bagDiv.appendChild(itemDiv);
+        }
+
+        updateTotalCost();
+      }
+
+      // Function to update the total cost display
+      function updateTotalCost() {
+        const totalCostDiv = document.querySelector(".total-cost-container");
+        const totalCostItems = totalCostDiv.querySelectorAll(".menu-item");
+        for (const item of totalCostItems) {
+          item.remove();
+        }
+
+        if (Object.keys(bagItems).length === 0) {
+          const itemDiv = document.createElement("div");
+          itemDiv.className = "menu-item";
+          itemDiv.innerText = "Rs 0";
+          totalCostDiv.appendChild(itemDiv);
+          return;
+        }
+
+        let totalCost = 0;
+        for (const item in bagItems) {
+          totalCost += bagItems[item]['price'] * bagItems[item]['qty'];
+        }
+
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "menu-item";
+        itemDiv.innerText = "Rs " + totalCost;
+        totalCostDiv.appendChild(itemDiv);
+      }
+
+        // Function to fetch balance and show it to the right of the roll entry
+        function fetchBalance(roll) {
+            var balanceUrl = `http://127.0.0.1:8000/api/balance/${roll}`;
+            if (roll === '') {
+                alert('Please enter a student ID.');
+                return;
+            }
+            fetch(balanceUrl)
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (data.balance <= 0) {
+                        alert('Insufficient balance.');
+                        return;
+                    }
+                    const balanceDiv = document.querySelector('.balance');
+                    const balanceItems = balanceDiv.querySelectorAll('.balance-amount');
+                    for (const item of balanceItems) {
+                        item.remove();
+                    }
+                    const itemDiv = document.createElement('div');
+                    const titleDiv = document.createElement('div');
+                    titleDiv.className = 'title';
+                    titleDiv.innerText = 'Balance';
+                    itemDiv.className = 'balance-amount menu-item';
+                    itemDiv.innerText = `Rs ${data.balance}`;
+                    balanceDiv.appendChild(titleDiv);
+                    balanceDiv.appendChild(itemDiv);
+                });
+        }
+
+        // Function to checkout
+        function checkout() {
+            const roll = document.querySelector('#roll-input').value;
+            if (roll === '') {
+                alert('Please enter a student ID.');
+                return;
+            }
+            const checkoutUrl = `http://localhost:8000/api/checkout/`;
+            // make a post request with roll id and items in the bag with their prices and quantities
+            fetch(checkoutUrl, {
+                method: 'POST',
+                headers: {
+                    'Media-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    roll: roll,
+                    items: bagItems,
+                }),
+            })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (data.status === 'success') {
+                        alert('Order placed successfully.');
+                        bagItems = {};
+                        updateBag();
+                        fetchBalance(roll);
+                    } else {
+                        alert('Order failed.');
+                    }
+                });
+        }
+            
+    </script>
+  </body>
+</html>

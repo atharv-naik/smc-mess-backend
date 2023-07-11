@@ -1,0 +1,89 @@
+{% extends 'smc/base.html' %}
+
+
+<title>
+    {% block title %}
+    SMC Menu
+    {% endblock %}
+</title>
+
+{% block content %}
+    <h1>Select Items</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="roll">Student ID:</label>
+        <input type="text" name="roll" id="roll">
+        <input type="submit" value="Check Balance" id="roll-search">
+        <!-- <button id="roll-search" onclick="fetchBalance(document.getElementById('roll').value)">Check Balance</button> -->
+
+        {% if error_message %}
+            <p>{{ error_message }}</p>
+        {% endif %}
+
+        <div class="balance">
+
+        </div>
+
+        <h2>Menu Items</h2>
+        <ul>
+            {% for item in menu_items %}
+                <li>
+                    <label>
+                        <input type="checkbox" name="selected_items[]" value="{{ item.price }}">
+                        {{ item.name }} - ${{ item.price }}
+                    </label>
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="total">
+
+        </div>
+
+        <input type="submit" value="Checkout">
+    </form>
+
+    <script>
+        var form = document.querySelector('#roll-search');
+        form.addEventListener('click', function(event) {
+            event.preventDefault();
+            var selectedItems = document.querySelectorAll('input[name="selected_items[]"]:checked');
+            if (document.querySelector('#roll').value === '') {
+                alert('Please enter a student ID.');
+            }
+            var roll = document.querySelector('#roll').value;
+            var balanceUrl = `http://127.0.0.1:8000/api/balance/${roll}`;
+            fetch(balanceUrl)
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (data.balance <= 0) {
+                        alert('Insufficient funds.');
+                        event.preventDefault();
+                    }
+                    var balance = document.querySelector('.balance');
+                    balance.innerHTML = `Balance: $${data.balance}`;
+                    
+                });
+        });
+
+
+
+        var total = document.querySelector('.total');
+        var checkboxes = document.querySelectorAll('input[name="selected_items[]"]');
+        checkboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('click', function(event) {
+                var totalAmount = 0;
+                checkboxes.forEach(function(checkbox) {
+                    if (checkbox.checked) {
+                        totalAmount += parseFloat(checkbox.value);
+                    }
+                });
+                total.innerHTML = `Total: $${totalAmount}`;
+            });
+        });
+    </script>
+
+    
+    {% endblock %}
+    ```

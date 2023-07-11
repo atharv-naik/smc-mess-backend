@@ -1,0 +1,21 @@
+{% extends 'smc/base.html' %}
+
+{% block heading %}
+    <h1>Login</h1>
+{% endblock %}
+
+{% block content %}
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <label>
+            <input type="text" name="username" placeholder="username">
+        </label>
+        <label>
+            <input type="password" name="password" placeholder="password">
+        </label>
+
+        <button type="submit">Login</button>
+    </form>
+{% endblock %}
+```
