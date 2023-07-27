@@ -1,3 +1,4 @@
+import os
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from smc.models import Student, MenuItem
@@ -91,15 +92,17 @@ def emailStatement(request, roll):
             student = Student.objects.get(roll=roll)
             transactions = student.transaction_set.all()
             # make a pdf of the transactions and email it to the user requesting endpoint
-            make_pdf(transactions)
+            pdf = make_pdf(transactions)
             # email the pdf to the user
             email = EmailMessage(
                 subject=f'Statement for {student.roll}',
                 body='Please find the attached statement',
-                attachments=[('statement.pdf', open('statement.pdf', 'rb').read(), 'application/pdf')],
+                attachments=[(pdf, open(pdf, 'rb').read(), 'application/pdf')],
                 to=[request.user.email]
             )
             email.send()
+            # delete the pdf
+            os.remove(pdf)
             return Response({'message': 'success'})
         else:
             return Response({'error': 'Not authorized'})
