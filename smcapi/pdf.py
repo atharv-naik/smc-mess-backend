@@ -117,3 +117,5 @@ def make_pdf(transactions, path="statement.pdf"):
 
     # Generate the PDF from HTML using pdfkit
     pdfkit.from_string(html, path)
+    
+    return path

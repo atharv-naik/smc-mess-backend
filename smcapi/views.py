@@ -7,7 +7,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from smc.models import Student, MenuItem, Transaction
 from decimal import Decimal
 from .pdf import make_pdf
-from django.core.mail import EmailMessage
+from .tasks import send_email
 
 # Create your views here.
 
@@ -94,15 +94,15 @@ def emailStatement(request, roll):
             # make a pdf of the transactions and email it to the user requesting endpoint
             pdf = make_pdf(transactions)
             # email the pdf to the user
-            email = EmailMessage(
-                subject=f'Statement for {student.roll}',
-                body='Please find the attached statement',
-                attachments=[(pdf, open(pdf, 'rb').read(), 'application/pdf')],
-                to=[request.user.email]
-            )
-            email.send()
-            # delete the pdf
-            os.remove(pdf)
+            # email = EmailMessage(
+            #     subject=f'Statement for {student.roll}',
+            #     body='Please find the attached statement',
+            #     attachments=[(pdf, open(pdf, 'rb').read(), 'application/pdf')],
+            #     to=[request.user.email]
+            # )
+            # email.send()
+            send_email.delay(f'Statement for {student.roll}', 'Please find the attached statement', [request.user.email], [pdf])
+
             return Response({'message': 'success'})
         else:
             return Response({'error': 'Not authorized'})
