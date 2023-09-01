@@ -71,6 +71,9 @@ class Transaction(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     transaction_id = ShortUUIDField(length=11, default=shortuuid.uuid, primary_key=True, editable=False, unique=True)
 
+    class Meta:
+        ordering = ['-timestamp']
+
     def __str__(self):
         return f'{self.student.roll} - {self.transaction_type} - {self.amount}'
 
