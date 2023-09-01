@@ -161,6 +161,12 @@ def getRoutes(request):
             'method': 'GET',
             'body': None,
             'description': 'Returns the transaction history of the student with roll number `roll`'
+        },
+        {
+            'Endpoint': '/email_statement/<str:roll>',
+            'method': 'GET',
+            'body': None,
+            'description': 'Emails the transaction history of the student with roll number `roll` to the user requesting the endpoint (either the student or admin)'
         }
     ]
     return Response(routes)
