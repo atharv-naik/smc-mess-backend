@@ -90,7 +90,8 @@ def emailStatement(request, roll):
     try:
         if request.user.student.roll == roll or request.user.is_staff:
             student = Student.objects.get(roll=roll)
-            transactions = student.transaction_set.all()
+            # get recent 10 transactions
+            transactions = student.transaction_set.all()[:10]
             # make a pdf of the transactions and email it to the user requesting endpoint
             pdf = make_pdf(transactions)
             # email the pdf to the user
@@ -106,8 +107,8 @@ def emailStatement(request, roll):
             return Response({'message': 'success'})
         else:
             return Response({'error': 'Not authorized'})
-    except AttributeError:
-        return Response({'error': 'Not authorized'})
+    except AttributeError as e:
+        return Response({'error': f'some error occured\n{e}'})
 
 
 
