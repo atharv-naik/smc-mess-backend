@@ -67,7 +67,10 @@ def make_pdf(transactions, path="statement.pdf"):
             "balance": transaction.balance,
             "timestamp": transaction.timestamp,
             "student_id": transaction.student.id,
-            "items": [item.name for item in transaction.items.all()]
+            "items": {
+                # dictionary of item_name: qty
+                item.name: transaction.items.filter(name=item.name).count() for item in MenuItem.objects.all() if transaction.items.filter(name=item.name).count() > 0
+            }
         }
         transformed_transactions.append(transformed_transaction)
 
@@ -87,7 +90,7 @@ def make_pdf(transactions, path="statement.pdf"):
             transaction["balance"],
             transaction["timestamp"],
             Student.objects.get(id=transaction["student_id"]).roll,
-            ", ".join(transaction["items"])
+            ", ".join([f"{item} - {qty}" for item, qty in transaction["items"].items()])
         ]
         table_data.append(row)
 
