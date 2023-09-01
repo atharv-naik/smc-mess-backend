@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-+a(cd+3s9!r-byt=d&iwbw98)$)y-0gg1bl5i(_r@hfe4kuz!w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -125,6 +125,10 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_ID')
 
+
+# Student Account Balance settings
+MIN_STUDENT_ACCOUNT_BALANCE = 50
+MIN_BALANCE_TOP_UP = 500
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
